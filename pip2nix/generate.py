@@ -342,12 +342,17 @@ class NixFreezeCommand(FreezeCommand):
 
         return requirement_set
 
-    def run(self, options, _args):
+    def run(self, options, args):
         with Contexter() as ctx:
             self.cleanup = ctx
             options, args = self.prepare_options(options)
-            requirement_set = self.super_run(options, args)
-            return requirement_set
+            self.temp_path = options.temp_path or mkdtemp(
+                prefix='pip2nix-req-source-'
+            )
+
+            with RequirementTracker() as req_tracker:
+                self.req_tracker = req_tracker
+                return super(NixFreezeCommand, self).run(options, args)
 
     def prepare_options(self, options):
         """Load configuration from self.config into pip options.
