@@ -15,7 +15,10 @@ try:
 except:
     from pip._internal import cmdoptions
 from pip._internal.cache import WheelCache
-from pip._internal.commands.install import InstallCommand
+from pip._internal.commands.freeze import FreezeCommand
+from pip._internal.req import req_install
+from pip._internal.req.req_tracker import get_requirement_tracker
+from pip._internal.utils.misc import get_installed_distributions
 from pip._internal.operations.prepare import RequirementPreparer
 from pip._internal.req import RequirementSet
 from pip._internal.req.req_tracker import RequirementTracker
@@ -48,7 +51,7 @@ def temp_dir(name):
     shutil.rmtree(path)
 
 
-class NixFreezeCommand(InstallCommand):
+class NixFreezeCommand(FreezeCommand):
 
     name = 'pip2nix'
     usage = InstallCommand.usage.replace('%prog', name)
