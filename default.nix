@@ -11,8 +11,9 @@ let
 
   # Works with the new python-packages, still can fallback to the old
   # variant.
-  basePythonPackagesUnfix = basePythonPackages.__unfix__ or (
-    self: basePythonPackages.override (a: { inherit self; }));
+  basePythonPackagesUnfix = if basePythonPackages ? "__unfix__"
+    then basePythonPackages.__unfix__
+    else self: basePythonPackages;
 
   elem = builtins.elem;
   basename = path: last (splitString "/" path);
@@ -38,12 +39,7 @@ let
         self.pip
         pkgs.nix
       ] ++ attrs.buildInputs;
-      pythonWithSetuptools = self.python.withPackages(ps: with ps; [
-        setuptools
-      ]);
-      propagatedBuildInputs = [
-        pythonWithSetuptools
-      ] ++ attrs.propagatedBuildInputs;
+      propagatedBuildInputs = attrs.propagatedBuildInputs;
       preBuild = ''
         export NIX_PATH=nixpkgs=${pkgs.path}
         export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
@@ -52,7 +48,7 @@ let
         for f in $out/bin/*
         do
           wrapProgram $f \
-            --set PIP2NIX_PYTHON_EXECUTABLE ${pythonWithSetuptools}/bin/python
+            --set PIP2NIX_PYTHON_EXECUTABLE ${self.python.interpreter}
         done
       '';
     });

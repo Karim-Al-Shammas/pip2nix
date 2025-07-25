@@ -4,7 +4,7 @@
       type = "github";
       owner = "NixOS";
       repo = "nixpkgs";
-      ref = "nixos-20.09";
+      ref = "nixos-23.11";
     };
 
     flake-utils = {
@@ -39,7 +39,7 @@
           ))
           // {
             docs = packages.docs;
-            default = packages.pip2nix.python39;
+            default = packages.pip2nix.python311;
           };
       }
     );
