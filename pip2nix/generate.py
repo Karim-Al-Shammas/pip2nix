@@ -7,8 +7,6 @@ from collections import OrderedDict
 from tempfile import mkdtemp
 
 from pip._internal.commands.freeze import FreezeCommand
-from pip._internal.req import req_install
-from pip._internal.utils.misc import get_installed_distributions
 from pip._internal.network.session import PipSession
 from pip._internal.req.req_tracker import RequirementTracker
 from pip._internal.operations.prepare import RequirementPreparer
